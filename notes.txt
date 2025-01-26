@@ -1,0 +1,38 @@
+plan TIPE :
+
+-> expliquer le modèle, représentation des messages, modèle d'erreur, objectif des codes et du TIPE
+
+-> modèle d'erreur :
+	important que p<1/2 pour que le modèle ait un sens
+	événements d'erreur sur les bits indépendants entre eux
+	symétrique (0->1 mm proba que 1->0)
+	
+	travail sur les probas p.158
+
+-> correction :
+	chercher à minimiser le poids de m-m' pour m' reçu
+	
+	IMPORTANT : équivalence des codes pour lesquels on applique la même permutation à tous les mots de code
+	en découle non unicité des codes (logique)
+	
+	code pair et intérêt
+	
+	changement de base pour changer la forme du code
+	
+	retrouver le mot = projeter dans le plan du code
+	
+	on veut souvent se ramener à une matrice de la forme : [I_k B]
+	
+	extension paire
+	
+	déf syndrome pour décoder -> identifier la colonne à laquelle correspond syndrome du message = quel bit est erroné
+	
+	construction récursive des matrices vérificatrices p173
+	
+	taux d'erreur binaire disque dur
+	
+
+D'après chercheurs de (DOI:10.1109/ICNIT.2010.5508536) TEB proche de 10^-3 sans correction d'erreur avec BPSK (transmission classique d'info par un signal)
+
+Utilisation codes correcteur sur corps de caractéristique 4 éventuellement utile dans la transmission de signaux
+En envisageant un message avec plus de 4 états différents.
