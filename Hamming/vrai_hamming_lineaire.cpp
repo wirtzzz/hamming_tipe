@@ -177,37 +177,46 @@ void simplifier(Matrice& P){
     }
 }
 
-Matrice G(Matrice P){
-    Matrice g(P.m,P.n);
-    Matrice var(P.m-P.n,P.n);       // matrice initialisée à zéros qui permet d'exprimer la dépendance des n-m dernières valeurs en les n autres valeurs (dim Ker P = m) puis des m premières
-
-    for (int i = 0; i < P.m; i++)
+Matrice gen(Matrice P){       // fonctionne dans le cas des matrices vérificatrices simplifiées
+    Matrice g(P.m-P.n,P.m);
+    Matrice var(P.n,P.m-P.n);       // matrice initialisée à zéros qui permet d'exprimer la dépendance des n premières valeurs en les m-n autres valeurs (dim Ker P = m-n)
+    printf("vimne");
+    for (int i = 0; i < P.n; i++)
     {
-        for (int j = 0; j < P.n; j++)
+        for (int j = P.n; j < P.m; j++)
         {
-            if (j<i)    // si j<i, on a déjà calculé la dépendance de j en les m premieres variables
-            {
-                
-            }
+            var.tableau[i][j-P.n]=P.tableau[i][j];
             
         }
         
         
     }
+
+    // on colle la transposée de var et une matrice I_(m-n)
+    for (int i = 0; i < P.m-P.n; i++)
+    {
+        for (int j = 0; j < P.n; j++)
+        {
+            g.tableau[i][j]=var.tableau[j][i];
+        }
+        g.tableau[i][P.n+i]=1;
+    }
+    
     
     return g;
 }
 
-void produit(Matrice m, int* vect, int* res){
+void produit(Matrice m, int* vect, int* res, bool t=true){      // t est un booléen qui indique si on considère la matrice comme sa transposée
     for (int i = 0; i < m.n; i++)
     {
         for (int j = 0; j < m.m; j++)
         {
-            if (*(vect+i)==1)
+            if (t)
             {
-                *(res+j)=(*(res+j)+m.tableau[i][j])%2;
+                *(res+j)=(*(res+j)+*(vect+i)*m.tableau[i][j])%2;
             }
-            
+            else
+                *(res+i)=(*(res+i)+*(vect+j)*m.tableau[i][j])%2;
         }
         
     }
@@ -221,14 +230,27 @@ int main(){
 
     simplifier(P);
     P.afficher();
-    int message[3]={1,0,1};
+
+    Matrice G=gen(P);
+    G.afficher();
+    int message[3]={0,0,1};
     int sortie[7]={0,0,0,0,0,0,0};
-    produit(P, message, sortie);
+    produit(G, message, sortie);
+    sortie[2]=(sortie[2]+1)%2;
     for (int i = 0; i < 7; i++)
     {
         cout << sortie[i];
     }
+    cout << endl;
+
+    int recu[3]={0,0,0};
+    produit(P, sortie,recu, false);
+    for (int i = 0; i < 3; i++)
+    {
+        cout << recu[i] ;
+    }
     
+    cout << endl;
     return 0;
 }
 
