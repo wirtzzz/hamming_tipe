@@ -38,6 +38,12 @@ class Matrice {
             }
             printf("\n");
         }
+
+        Matrice operator=(Matrice const& mat){
+            this->n=mat.n;
+            this->m=mat.m;
+            this->tableau=mat.tableau;
+        }
 };
 
 #endif /*HAMMING_GENERAL_LINEAIRE_H*/

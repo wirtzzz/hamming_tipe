@@ -129,14 +129,14 @@ int w(int* x, int* y, int l){
 }
 
 // génération d'une matrice vérificatrice de Hamming
-Matrice P(int n){
+Matrice V(int n){
     if (n==1){
         Matrice A(1,1);
         A.tableau[0][0]=1;
         return A;
     }
 
-    Matrice B=P(n-1);
+    Matrice B=V(n-1);
     Matrice A(B.n+1,2*B.m+1);
 
     for (int i = 0; i < B.m+1; i++)
@@ -155,16 +155,43 @@ Matrice P(int n){
     return A;
 }
 
+void echange_colonne(Matrice* m, int i, int j){
+    for (int k = 0; k < m->n; k++)
+    {
+        int a=m->tableau[k][i];
+        m->tableau[k][i]=m->tableau[k][j];
+        m->tableau[k][j]=a;
+    }
+    
+}
+
+// une matrice simplifiant la matrice en question
+
+void simplifier(Matrice& P){
+    int a=(P.m+1)/2;
+    int b=0;
+    for (int i=0; i < P.n; i++){
+        b=b+a;
+        echange_colonne(&P,i,b-1);
+        a=a/2;
+    }
+}
+
 Matrice G(Matrice P){
     Matrice g(P.m,P.n);
     Matrice var(P.m-P.n,P.n);       // matrice initialisée à zéros qui permet d'exprimer la dépendance des n-m dernières valeurs en les n autres valeurs (dim Ker P = m) puis des m premières
 
     for (int i = 0; i < P.m; i++)
     {
-        for (int j = 0; i < count; i++)
+        for (int j = 0; j < P.n; j++)
         {
-            /* code */
+            if (j<i)    // si j<i, on a déjà calculé la dépendance de j en les m premieres variables
+            {
+                
+            }
+            
         }
+        
         
     }
     
@@ -188,10 +215,15 @@ void produit(Matrice m, int* vect, int* res){
 }
 
 int main(){
-    P(3).afficher();
+    Matrice P=V(3);
+    P.afficher();
+
+
+    simplifier(P);
+    P.afficher();
     int message[3]={1,0,1};
     int sortie[7]={0,0,0,0,0,0,0};
-    produit(P(3), message, sortie);
+    produit(P, message, sortie);
     for (int i = 0; i < 7; i++)
     {
         cout << sortie[i];
