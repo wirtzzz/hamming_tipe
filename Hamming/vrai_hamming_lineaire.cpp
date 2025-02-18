@@ -11,6 +11,7 @@ utilisation du décalage à droite permet de mieux identifier les différentes c
 */
 
 #include <iostream>
+#include <random>
 #include "hamming_general_lineaire.hpp"
 using namespace std;
 
@@ -128,6 +129,18 @@ int w(int* x, int* y, int l){
     return s;
 }
 
+
+
+void print(int* m, int l){
+    //  l étant la longueur du message
+    for (int i = 0; i < l; i++)
+    {
+        cout << *(m+i);
+    }
+    
+}
+
+
 // génération d'une matrice vérificatrice de Hamming
 Matrice V(int n){
     if (n==1){
@@ -180,7 +193,6 @@ void simplifier(Matrice& P){
 Matrice gen(Matrice P){       // fonctionne dans le cas des matrices vérificatrices simplifiées
     Matrice g(P.m-P.n,P.m);
     Matrice var(P.n,P.m-P.n);       // matrice initialisée à zéros qui permet d'exprimer la dépendance des n premières valeurs en les m-n autres valeurs (dim Ker P = m-n)
-    printf("vimne");
     for (int i = 0; i < P.n; i++)
     {
         for (int j = P.n; j < P.m; j++)
@@ -223,6 +235,46 @@ void produit(Matrice m, int* vect, int* res, bool t=true){      // t est un bool
     
 }
 
+
+void correction(Matrice verif, int* message){
+    //  Hamming dans cette version est un code 1-correcteur : l'algorithme suivant ne peut naturellement fonctionner que lorsqu'un bit au plus est modifié
+    int syndrome[verif.n];
+
+    for (int i = 0; i < verif.n; i++)
+    {
+        syndrome[i]=0;
+    }
+    
+    produit(verif,message,syndrome,false);
+
+    // le syndrome correspond (dans le cas où un une bit est modifié) à la colonne du bit modifié dans verif (Demazure)
+    int s=0;
+    // dans un premier cas on vérifie si le syndrome est tout simplement nulle, auquel cas il n'y a en théorie pas d'erreur
+
+    for (int i = 0; i < verif.n; i++)
+    {
+        s=s+*(syndrome+i);
+    }
+    if (s==0)
+        return;
+    
+    for (int i = 0; i < verif.m; i++)
+    {
+        s=0;
+        for (int j = 0; j < verif.n; j++)
+        {
+            s=s+abs(verif.tableau[j][i]-*(syndrome+j));
+        }
+        
+        if(s==0){
+            *(message+i)=(*(message+i)+1)%2;
+
+            return;
+        }
+        
+    }
+}
+
 int main(){
     Matrice P=V(3);
     P.afficher();
@@ -233,23 +285,30 @@ int main(){
 
     Matrice G=gen(P);
     G.afficher();
-    int message[3]={0,0,1};
+    int message[4]={0,0,0,0};   // 4 bits transportés pour 3 bits de redondance idiot ! (en (7,4,3))
     int sortie[7]={0,0,0,0,0,0,0};
     produit(G, message, sortie);
-    sortie[2]=(sortie[2]+1)%2;
-    for (int i = 0; i < 7; i++)
-    {
-        cout << sortie[i];
-    }
+
+    cout << "Message encodé" << endl;
+    print(sortie, 7);
     cout << endl;
 
-    int recu[3]={0,0,0};
-    produit(P, sortie,recu, false);
-    for (int i = 0; i < 3; i++)
-    {
-        cout << recu[i] ;
-    }
+    sortie[5]=(sortie[5]+1)%2;
+    cout << "Ajout d'une erreur" << endl;
+    print(sortie,7);
+    cout << endl;
+
+    int syndrome[3]={0,0,0};
+    produit(P, sortie,syndrome, false);
+    print(syndrome, 3);
     
+    cout << endl;
+
+    // correction :)
+
+    correction(P,sortie);
+    cout << "Sortie corrigée" << endl;
+    print(sortie,7);
     cout << endl;
     return 0;
 }
