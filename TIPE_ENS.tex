@@ -1,0 +1,81 @@
+\documentclass[10pt]{article}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[french]{babel}
+\title{Étude des codes de Hamming sur les corps finis}
+\author{Andreas Pauper}
+\date{}
+
+%éventuellement insérer une illustration des canaux binaires, parler des bouffées d'erreur
+\begin{document}
+\maketitle
+
+\section{Introduction et définitions}
+
+Dans tout le TIPE, si l'on se place sur un corps de cardinal $N$ (où $N$ est la puissance d'un nombre premier), le terme code fera référence à une partie de $ N^{k} $, où k est un entier considéré comme la taille du code.
+%remontrer que le cardinal K doit être la puissance d'un nombre premier ?
+Les éléments du codes sont en théorie des codes associés à des éléments d'un ensemble plus petit de façon à s'assurer que des messages stockés ou transmis puissent être conservés malgré les erreurs qui peuvent être rencontrées.
+
+Le code correspond alors également à l'injection entre l'ensemble des messages de taille $\alpha$ (c'est-à-dire $K^{\alpha}$) et la partie aussi appelée code $C \subset K^{\beta}$.
+
+Au sein de la famille plus large des codes correcteurs, on s'intéressera ici uniquement à des codes linéaires, c'est-à-dire des codes $C$ qui sont des sous-espaces vectoriels de $K^{\beta}$ et où les fonctions de codages peuvent donc êtres linéaires, ce qui simplifie les calculs.
+Plus exactement si l'on note $\phi$ l'injection permettant de coder les messages de l'ensemble de départ $K^{\alpha}$ (ou $K$ est un corps de cardinal $p^{k}$) dans l'ensemble d'arrivée $C$, $\phi$ est un code linéaire si et seulement si pour tous messages \textbf{m} et \textbf{m'} dans $K^{\alpha}$, pour tous scalaires $\lambda$ et $\mu$ dans $K$ on a
+
+\begin{displaymath}
+\phi (\lambda \textbf{m}+ \mu \textbf{m'})=\lambda  \phi(\textbf{m})+\mu  \phi(\textbf{m'})
+\end{displaymath}
+
+Dire que le code est linéaire revient donc à dire que $\phi$ ainsi définie est $K$-linéaire. Nous utilisons ainsi dans le cadre des codes linéaires plusieurs fonctions qui sont linéaires.
+Ainsi si $\phi$ est une application linéaire de $K^{\alpha}$ dans un espace d'arrivée $K^{\beta}$, en représentant les mots \textbf{m} au départ et à \textbf{m} et \textbf{m'} à l'arrivée par la matrice ligne des coordonnées dans les bases canoniques des deux espaces, on peut représenter $\phi$ par une matrice $\Phi$ dans $\mathcal{M}_{\alpha,\beta}(K)$ avec :
+
+\begin{displaymath}
+\textbf{m'}= \textbf{m} \cdot \Phi^{\intercal}
+\end{displaymath}
+
+Il existe de nombreux codes linéaires mais nous nous concentrerons ici sur les codes de Hamming, définis initialement sur le corps $F_{2}$. Nous étudierons ici les codes définis sur $F_{2^{\alpha}}$ pour des raisons que nous évoquerons d'ici peu.
+
+\paragraph{Distance de Hamming}
+La distance de Hamming permet de mesurer les différences entre deux mots, dans le cas où le corps d'étude est $F_{2}$, il s'agit du nombre de bits qui diffèrent. Si l'on se place sur $K^{\alpha}$, la distance de Hamming $d$ entre deux messages $\textbf{m}=[ m_1 \cdots m_{\alpha} ] $ et $\textbf{m'}=[ m'_1 \cdots m'_{\alpha} ] $ de $K^{\alpha}$ est définie comme suit :
+
+\begin{displaymath}
+d(\textbf{m},\textbf{m'})=\mid \lbrace 0\leq i \leq \alpha / m_i \neq m'_i \rbrace \mid
+\end{displaymath}
+
+%problème de hbox orthogonal dégueu
+
+\paragraph{Produit scalaire sur $K^{\alpha}$}
+Il est important pour la suite de définir un « produit scalaire » (il n'est pas défini) sur $K^{\alpha}$, permettant entre autres de définir l'orthogonalité sur cet espace et de vérifier l'appartenance d'un mot \textbf{m} de $K^{\alpha}$ au code $C \subset K^{\alpha}$. En notant $\textbf{m}=[ m_1 \cdots m_n ] $ et $\textbf{m'}=[ m'_1 \cdots m'_n ] $ deux messages de $K^{\alpha}$, on a :
+
+\begin{equation}
+\langle \textbf{m}, \textbf{m'} \rangle = \sum_{i=1}^{\alpha} m_i m'_i
+\end{equation}
+
+
+
+\section{Choix de $p$}
+Il a été dit plus tôt qu'un corps fini a pour cardinal une puissance d'un nombre premier $p$. Cependant en pratique le nombre premier 2 est toujours choisi. Cet entier premier est le seul permettant d'optimiser l'utilisation de la mémoire d'un ordinateur moderne à architecture binaire.
+
+\begin{proof}[Démonstration.]
+Attribuer une certaine quantité de mémoire pour représenter un élément du corps $K$ de cardinal $p^l$ revient à y attribuer un certains nombres de bits $l'$.
+Autrement dit, il serait souhaitable d'avoir $p^l = 2^{l'}$, c'est-à-dire qu'à chaque combinaison d'états de bits possible corresponde un unique élément de $K$. Alors $2 | p^l$, ce qui n'est possible que si $p=2$.
+\end{proof}
+
+Nous nous placerons dans le cas où $p=2$ dans toute la suite du TIPE.
+
+\section{Représentation des erreurs}
+%bernoulli pour erreurs isolées puis Markov pour bouffée d'erreurs
+Pour qu'il y ait détection et correction d'erreurs, il faut d'abord qu'erreurs il y ait. Pour cela il convient de déterminer la probabilité qu'un bit soit erroné. Deux modèles seront étudiés ici : un premier modèle permet de représenter les erreurs affectant chaque bit individuellement et un autre permet de modéliser les cas de corruptions de plusieurs bits à la suite, les «bouffées d'erreurs», qui peuvent survenir par exemple lorsqu'on raye un CD. Nous considérons dans toute cette partie des messages de $l>0$ bits.
+
+\subsection{Premier modèle : erreurs indépendantes}
+
+Considérons $\textbf{m}=[m_1 \cdots m_l] \in (F_2)^l$, dans ce modèle les lettres $m_i$ sont indépendantes deux à deux et pour $1 \leq i \leq l$, $m_i$ suit une loi de Bernoulli de paramètre $0<\rho<1/2$.\\
+En effet certains cas sont inutiles à considérer. Le cas $p=0$ n'est pas intéressant car il n'y aurait dans ce cas pas d'erreurs à corriger, le cas $p > 1/2$ est peu probable et pourrait se déduire en inversant tous les bits en plus de l'utilisation de codes de Hamming. Dans le cas où $p=1/2$ il devient tout bonnement impossible de corriger les erreurs. 
+
+\section{Construction et représentation de $K$}
+%utilisation des polynômes de degré alpha, expliquer l'ambiguité
+Si $p$ est premier il est évident d'après le petit théorème de Fermat que $\mathbb{Z}/p \mathbb{Z}$ est un corps, cherchons maintenant à construire un corps de cardinal $p^{\alpha}$ avec $\alpha$ naturel non nul.
+
+\end{document}

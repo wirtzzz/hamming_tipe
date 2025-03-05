@@ -36,3 +36,12 @@ D'après chercheurs de (DOI:10.1109/ICNIT.2010.5508536) TEB proche de 10^-3 sans
 
 Utilisation codes correcteur sur corps de caractéristique 4 éventuellement utile dans la transmission de signaux
 En envisageant un message avec plus de 4 états différents.
+
+Sur les CD : utilisation de codes à 256 éléments pour Reed Solomon :)
+Plus grand corps = meilleure gestion des bouffées d'erreurs et plus grande distance minimale (p.240 Demazure)
+
+
+utilisation des polynômes ??
+-> pour représenter les corps finis, plus simple que de créer entièrement le corps
+si l'on prend F_4 par exemple, on peut noter les éléments comme étant les [ab]=aX+b où a et b sont dans {0,1}, où les additions sont naturelles et les multiplications le sont plutôt aussi
+traitons d'abord de cette façon F_4 et F_8 s'il y a le temps

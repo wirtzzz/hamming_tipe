@@ -15,7 +15,11 @@ utilisation du décalage à droite permet de mieux identifier les différentes c
 #include "hamming_general_lineaire.hpp"
 using namespace std;
 
-// définitions un peu pète couilles
+// définitions un peu pète couilles, utiliser des polynômes peut être
+
+struct f4 {
+    bool X,U;   // booléen des unités et des X
+};
 
 enum F4 {E, A, B, C};   // E=0, A=1, B=X, C=X+1 dans l'extension (Z/2Z)/(X^2+X+1)
 
@@ -285,7 +289,7 @@ int main(){
 
     Matrice G=gen(P);
     G.afficher();
-    int message[4]={0,0,0,0};   // 4 bits transportés pour 3 bits de redondance idiot ! (en (7,4,3))
+    int message[4]={0,0,1,1};   // 4 bits transportés pour 3 bits de redondance idiot ! (en (7,4,3))
     int sortie[7]={0,0,0,0,0,0,0};
     produit(G, message, sortie);
 
