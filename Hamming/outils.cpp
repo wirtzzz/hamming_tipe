@@ -1,4 +1,4 @@
-#include "hamming_general_lineaire.hpp"
+#include "outils.hpp"
 #include <random>
 using namespace std;
 

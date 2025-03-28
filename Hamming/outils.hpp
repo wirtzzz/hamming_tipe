@@ -1,5 +1,5 @@
-#ifndef HAMMING_GENERAL_LINEAIRE_H
-#define HAMMING_GENERAL_LINEAIRE_H
+#ifndef OUTILS_H
+#define OUTILS_H
 
 #include <iostream>
 #include <vector>
@@ -46,4 +46,6 @@ class Matrice {
         }
 };
 
-#endif /*HAMMING_GENERAL_LINEAIRE_H*/
+
+
+#endif /*OUTILS_H*/

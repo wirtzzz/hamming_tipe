@@ -7,6 +7,8 @@ chapitre 13 -> codes de Hamming ?
 
 -> utilisation de polynômes ?
 
+le jour de l'oral -> parler des polynômes cyclotomiques pour la construction des nombres premiers
+
 
 (pour moi hors du TIPE)
 -> p.63 RSA

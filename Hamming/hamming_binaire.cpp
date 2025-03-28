@@ -1,7 +1,4 @@
 /*
-hamming_general_lineaire contient des recherches faites antérieurement avant lecture du tome d'Algèbre de Michel Demazure
-nous tentons ici d'utiliser les outils définis dans Algèbre
-
 dans tout le code on s'occupera de codes de Hamming (n,k,d) où n est la longueur des messages, k la dimension, autrement dit la longueur des messages avant d'êtres encodés, et d la distance minimal de Hamming entre deux mots
 non nuls
 
@@ -12,114 +9,9 @@ utilisation du décalage à droite permet de mieux identifier les différentes c
 
 #include <iostream>
 #include <random>
-#include "hamming_general_lineaire.hpp"
+#include "outils.hpp"
 using namespace std;
 
-// définitions un peu pète couilles, utiliser des polynômes peut être
-
-struct f4 {
-    bool X,U;   // booléen des unités et des X
-};
-
-enum F4 {E, A, B, C};   // E=0, A=1, B=X, C=X+1 dans l'extension (Z/2Z)/(X^2+X+1)
-
-F4 operator+(F4 const& x, F4 const& y){
-    switch (x)
-    {
-    case E:
-        return y;
-    
-    case A:
-        switch (y)
-        {
-        case E:
-            return A;
-        
-        case A:
-            return E;
-
-        case B:
-            return C;
-        
-        default:
-            return B;
-        }
-    
-    case B:
-        switch (y)
-        {
-        case E:
-            return B;
-        
-        case A:
-            return C;
-
-        case B:
-            return E;
-        
-        default:
-            return A;
-        }
-
-    
-    default:
-       switch (y)
-        {
-        case E:
-            return C;
-        
-        case A:
-            return B;
-
-        case B:
-            return A;
-        
-        default:
-            return E;
-        }
-    }
-}
-
-F4 operator*(F4 const& x, F4 const& y){
-    switch (x)
-    {
-    case E:
-        return E;
-    
-    case A:
-        return y;
-    
-    case B:
-        switch (y)
-        {
-        case E:
-            return E;
-
-        case A:
-            return B;
-        
-        case B:
-            return C;
-        default:
-            return A;
-        }
-
-    default:
-        switch (y)
-        {
-        case E:
-            return E;
-        
-        case A:
-            return C;
-        
-        case B:
-            return A;
-        default:
-            return B;
-        }
-    }
-}
 
 // faire avec des bool dans le cas binaire, beaucoup plus simple
 
