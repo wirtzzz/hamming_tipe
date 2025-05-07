@@ -1,3 +1,4 @@
+#pragma once
 #ifndef OUTILS_H
 #define OUTILS_H
 

@@ -9,7 +9,7 @@ utilisation du décalage à droite permet de mieux identifier les différentes c
 
 #include <iostream>
 #include <random>
-#include "outils.hpp"
+#include "hamming_binaire.hpp"
 using namespace std;
 
 
@@ -128,7 +128,6 @@ void produit(Matrice m, int* vect, int* res, bool t=true){      // t est un bool
         }
         
     }
-    
 }
 
 
@@ -169,43 +168,5 @@ void correction(Matrice verif, int* message){
         }
         
     }
-}
-
-int main(){
-    Matrice P=V(3);
-    P.afficher();
-
-
-    simplifier(P);
-    P.afficher();
-
-    Matrice G=gen(P);
-    G.afficher();
-    int message[4]={0,0,1,1};   // 4 bits transportés pour 3 bits de redondance idiot ! (en (7,4,3))
-    int sortie[7]={0,0,0,0,0,0,0};
-    produit(G, message, sortie);
-
-    cout << "Message encodé" << endl;
-    print(sortie, 7);
-    cout << endl;
-
-    sortie[5]=(sortie[5]+1)%2;
-    cout << "Ajout d'une erreur" << endl;
-    print(sortie,7);
-    cout << endl;
-
-    int syndrome[3]={0,0,0};
-    produit(P, sortie,syndrome, false);
-    print(syndrome, 3);
-    
-    cout << endl;
-
-    // correction :)
-
-    correction(P,sortie);
-    cout << "Sortie corrigée" << endl;
-    print(sortie,7);
-    cout << endl;
-    return 0;
 }
 

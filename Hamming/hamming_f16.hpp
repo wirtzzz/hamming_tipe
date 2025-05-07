@@ -17,6 +17,21 @@ struct f16 {
     void afficher(){
         printf("%d%d%d%d", this->X3,this->X2,this->X,this->U);
     }
+    void afficher_int(){
+        int s=0;
+        if (this->X3)
+            s++;
+        s=s*2;
+        if (this->X2)
+            s++;
+        s=s*2;
+        if (this->X)
+            s++;
+        s=s*2;
+        if (this->U)
+            s++;
+        printf("%d", s);
+    }
 };
 
 f16 operator+(f16 const& x, f16 const& y){
@@ -31,7 +46,7 @@ f16 operator*(f16 const& x, f16 const& y){
     A3=((x.X3&&y.U)!=(x.X2&&y.X))!=((x.X&&y.X2)!=(x.U&&y.X3));
     A2=((x.X2&&y.U)!=(x.X&&y.X))!=(x.U&&y.X2);
     A1=((x.X&&y.U)!=(x.U&&y.X));
-    A0=x.U!=y.U;
+    A0=x.U&&y.U;
 
     if (A6){
         A5=!A5;
@@ -49,8 +64,6 @@ f16 operator*(f16 const& x, f16 const& y){
     }
     return {A3,A2,A1,A0};
 }
-
-
 
 f16 int_to_f16(int x){  // prend en argument un entier entre 0 et 15 et le décompose en base 2 dans f16
     int a=x;
@@ -92,7 +105,8 @@ class Matrice16 {       // matrices dans le corps à 16 éléments
             for (int i=0; i<this->n;i++){
                 for (int j = 0; j < this->m; j++)
                 {
-                    this->tableau[i][j].afficher();
+                    this->tableau[i][j].afficher_int();
+                    printf(" ");
                 }
                 printf("\n");
             }

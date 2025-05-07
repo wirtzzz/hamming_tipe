@@ -1,0 +1,1 @@
+// code pour faire des tests à partir du modèle des chaînes de Markov
