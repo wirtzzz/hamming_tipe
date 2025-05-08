@@ -9,7 +9,7 @@ utilisation du décalage à droite permet de mieux identifier les différentes c
 
 #include <iostream>
 #include <random>
-#include "hamming_binaire.hpp"
+#include "hamming_binaire.h"
 using namespace std;
 
 

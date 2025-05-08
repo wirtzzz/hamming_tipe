@@ -1,9 +1,75 @@
-#include "hamming_f16.hpp"
+#include "hamming_f16.h"
 #include <iostream>
 
 using namespace std;
 
-// construction de la matrice vérificatrice par récurrence
+f16 operator+(f16 const& x, f16 const& y){
+    return {x.X3 != y.X3, x.X2 != y.X2, x.X != y.X, x.U != y.U}; 
+}
+
+f16 operator*(f16 const& x, f16 const& y){
+    bool A6,A5,A4,A3,A2,A1,A0;
+    A6=x.X3&&y.X3;
+    A5=(x.X3&&y.X2) != (x.X2&&y.X3);
+    A4=((x.X3&&y.X) != (x.X2&&y.X2)) != (x.X && y.X3);
+    A3=((x.X3&&y.U)!=(x.X2&&y.X))!=((x.X&&y.X2)!=(x.U&&y.X3));
+    A2=((x.X2&&y.U)!=(x.X&&y.X))!=(x.U&&y.X2);
+    A1=((x.X&&y.U)!=(x.U&&y.X));
+    A0=x.U&&y.U;
+
+    if (A6){
+        A5=!A5;
+        A2=!A2;
+    }
+
+    if(A5){
+        A4=!A4;
+        A1=!A1;
+    }
+    
+    if(A4){
+        A3=!A3;
+        A0=!A0;
+    }
+    return {A3,A2,A1,A0};
+}
+
+bool operator==(f16 const& x, f16 const& y){
+    return (x.U==y.U)&&(x.X==y.X)&&(x.X2==y.X2)&&(x.X3==y.X3);
+}
+
+
+bool operator!=(f16 const& x, f16 const& y){
+    return !(x==y);
+}
+
+f16 inv(f16 const& x){                          // l'ensemble des x^n pour n entier est un sous groupe de f16 contenant x
+    if (x==f16({false,false,false,true}))        // si x est l'élément neutre
+        return x;
+
+    f16 inverse=x;
+    while (inverse*x != f16({false,false,false,true}))  // tant que inverse n'est pas l'inverse de x
+    {
+        inverse = inverse*x;
+    }
+    return inverse;
+}
+
+f16 operator/(f16 const& x, f16 const& y){
+    return x*inv(y);
+}
+
+f16 int_to_f16(int x){  // prend en argument un entier entre 0 et 15 et le décompose en base 2 dans f16
+    int a=x;
+    bool A0=x%2;
+    a=a/2;
+    bool A1=a%2;
+    a=a/2;
+    bool A2=a%2;
+    a=a/2;
+    bool A3=a;
+    return {A3,A2,A1,A0};
+}
 
 Matrice16 F(int r){ // calcul la matrice vérificatrice pour le code de hamming Hr avec r>=2
     if (r==2){
@@ -58,7 +124,7 @@ void echange_colonne(Matrice16* m, int i, int j){
     
 }
 
-Matrice16 P(int r){ // construit une matrice vérificatrice de rang r et lui donne une forme plus simple qui pourra être utilisée pour construire G_r
+Matrice16 P16(int r){ // construit une matrice vérificatrice de rang r et lui donne une forme plus simple qui pourra être utilisée pour construire G_r
     Matrice16 P=F(r);
     int a=(P.m-1)/16;
     int b=0;
@@ -72,7 +138,7 @@ Matrice16 P(int r){ // construit une matrice vérificatrice de rang r et lui don
     
 }
 
-Matrice16 G(Matrice16 A){ // A doit être de la forme [I B]
+Matrice16 G16(Matrice16 A){ // A doit être de la forme [I B]
     // dans un corps de caractéristique 2 comme F16, pas besoin de soustraction (additionner revient à soustraire)
     Matrice16 G(A.m,A.m-A.n);
     for (int j = 0; j < A.m-A.n; j++)
@@ -87,7 +153,7 @@ Matrice16 G(Matrice16 A){ // A doit être de la forme [I B]
 }
 
 
-void produit(Matrice16 m, f16* vect, f16* res, bool t=true){      // t est un booléen qui indique si on considère la matrice comme sa transposée
+void produit16(Matrice16 m, f16* vect, f16* res, bool t=true){      // t est un booléen qui indique si on considère la matrice comme sa transposée
     for (int i = 0; i < m.n; i++)
     {
         for (int j = 0; j < m.m; j++)
@@ -103,55 +169,59 @@ void produit(Matrice16 m, f16* vect, f16* res, bool t=true){      // t est un bo
     }
 }
 
-int main(){
-    F(3).afficher();
-    Matrice16 A=P(2);
-    cout << "====================================" << endl;
-    A.afficher();
-    cout << "longueur en bits de l'espace d'arrivée = "<< 4*A.m << endl;
-    Matrice16 g=G(A);
-    g.afficher();
+void correction16(Matrice16 verif, f16* message){
+    f16 syndrome[verif.n];
 
-    f16 m[15]={{0,0,0,0},{0,0,0,0},{0,1,1,1},{0,0,1,1},{0,0,0,0},{1,1,0,0},{1,1,1,1},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,1,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{1,1,1,1}};
-    f16 sortie[17];
-    for (int i=0; i < 17; i++){
-        sortie[i]={0,0,0,0};
+    for (int i = 0; i < verif.n; i++)
+    {
+        syndrome[i]={false,false,false,false};
     }
     
-    cout << "message original : ";
+    produit16(verif, message, syndrome, false);
 
-    for (int i=0; i < 15; i++){
-        m[i].afficher();
-    }
-
-    cout << " ou encore " ;
-
-    for (int i = 0; i < 15; i++)
+    int s=0;
+    for (int i = 0; i < verif.n; i++)
     {
-        m[i].afficher_int();
-        printf(" ");
+        if (((syndrome+i)->U) || ((syndrome+i)->X)  || ((syndrome+i)->X2)  || ((syndrome+i)->X3)){
+                s=1;
+                break;
+        }
+            
     }
-    cout << endl;
 
-    produit(g, m, sortie,false);
-    cout << "message en sortie :";
-
-    for (int i = 0; i < 17; i++)
+    if (s==0)
     {
-        sortie[i].afficher();
+        return;
     }
-    cout << "ou encore ";
-    for (int i = 0; i<17; i++){
-        sortie[i].afficher_int();
-        cout << " ";
+    
+    for (int i = 0; i < verif.m; i++)
+    {
+        s=0;
+
+        int i0=0;
+
+        while (i0<verif.n && *(syndrome+i0)==f16({false,false,false,false}) && verif.tableau[i0][i]== f16({false,false,false,false}))
+        {
+            i0++;
+        }
+        
+        if (i0 < verif.n && verif.tableau[i0][i]!= f16({false,false,false,false}))
+        {
+            f16 r = (*(syndrome+i0))/verif.tableau[i0][i];
+            for (int j = i0; j < verif.n; j++)
+            {
+                if (*(syndrome+j) != r*verif.tableau[j][i])
+                    s++;
+            }
+            
+            if (s==0)
+            {
+                *(message+i)=*(message+i) + r;
+                return;
+            }
+            
+        }
     }
-
-    f16 syndrome[2]={{0,0,0,0},{0,0,0,0}};
-    produit(A,sortie, syndrome,false);
-
-    cout << endl;
-    syndrome[0].afficher_int();
-    syndrome[1].afficher_int();
-
-    return 0;
+    
 }
+

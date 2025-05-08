@@ -32,50 +32,16 @@ struct f16 {
             s++;
         printf("%d", s);
     }
+    
 };
 
-f16 operator+(f16 const& x, f16 const& y){
-    return {x.X3 != y.X3, x.X2 != y.X2, x.X != y.X, x.U != y.U}; 
-}
-
-f16 operator*(f16 const& x, f16 const& y){
-    bool A6,A5,A4,A3,A2,A1,A0;
-    A6=x.X3&&y.X3;
-    A5=(x.X3&&y.X2) != (x.X2&&y.X3);
-    A4=((x.X3&&y.X) != (x.X2&&y.X2)) != (x.X && y.X3);
-    A3=((x.X3&&y.U)!=(x.X2&&y.X))!=((x.X&&y.X2)!=(x.U&&y.X3));
-    A2=((x.X2&&y.U)!=(x.X&&y.X))!=(x.U&&y.X2);
-    A1=((x.X&&y.U)!=(x.U&&y.X));
-    A0=x.U&&y.U;
-
-    if (A6){
-        A5=!A5;
-        A2=!A2;
-    }
-
-    if(A5){
-        A4=!A4;
-        A1=!A1;
-    }
-    
-    if(A4){
-        A3=!A3;
-        A0=!A0;
-    }
-    return {A3,A2,A1,A0};
-}
-
-f16 int_to_f16(int x){  // prend en argument un entier entre 0 et 15 et le décompose en base 2 dans f16
-    int a=x;
-    bool A0=x%2;
-    a=a/2;
-    bool A1=a%2;
-    a=a/2;
-    bool A2=a%2;
-    a=a/2;
-    bool A3=a;
-    return {A3,A2,A1,A0};
-}
+f16 operator+(f16 const&,f16 const&);
+f16 operator*(f16 const&,f16 const&);
+bool operator==(f16 const&,f16 const&);
+bool operator!=(f16 const&,f16 const&);
+f16 inv(f16 const&);
+f16 operator/(f16 const&,f16 const&);
+f16 int_to_f16(int);
 
 class Matrice16 {       // matrices dans le corps à 16 éléments
     public:
@@ -119,5 +85,12 @@ class Matrice16 {       // matrices dans le corps à 16 éléments
             this->tableau=mat.tableau;
         }
 };
+
+Matrice16 F(int);
+void echange_colonne(Matrice16*,int,int);
+Matrice16 P16(int);
+Matrice16 G16(Matrice16);
+void produit16(Matrice16,f16*,f16*,bool);
+void correction16(Matrice16,f16*);
 
 #endif /*HAMMING_F16_H*/

@@ -1,8 +1,7 @@
 #pragma once
-#ifndef OUTILS_H
-#define OUTILS_H
 
-#include <iostream>
+#ifndef HAMMING_BINAIRE_H
+#define HAMMING_BINAIRE_H
 #include <vector>
 
 class Matrice {
@@ -24,8 +23,8 @@ class Matrice {
                 tableau.push_back({});
                 for (int j = 0; j < m; j++)
                 {
-                    (tableau.back()).push_back(0);
-                }
+                    (tableau.back()).push_back(0); 
+                } 
             }
         }
 
@@ -40,13 +39,27 @@ class Matrice {
             printf("\n");
         }
 
-        Matrice operator=(Matrice const& mat){
+        void operator=(Matrice const& mat){
             this->n=mat.n;
             this->m=mat.m;
             this->tableau=mat.tableau;
         }
 };
 
+int w(int*,int*,int);
 
+void print(int*,int);
 
-#endif /*OUTILS_H*/
+Matrice V(int);
+
+void echange_colonne(Matrice*,int,int);
+
+void simplifier(Matrice&);
+
+Matrice gen(Matrice);
+
+void produit(Matrice,int*,int*,bool);
+
+void correction(Matrice,int*);
+
+#endif /* HAMMING_BINAIRE_H */
