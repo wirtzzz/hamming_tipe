@@ -1,0 +1,17 @@
+Tests avec une chaîne de Markov pour N=100000, rho1=0.999, rho2=0.75, r_max=6
+Rappel: rho1 est la probabilité qu'un bit soit correct sachant que le bit précédent l'est
+        rho2 celle qu'il soit incorrect sachant que le bit précédent est incorrect
+P(chi2) est la proportion de tests concluants pour hamming binaire, P(chi16) le nombre de tests concluants pour hamming sur le corps f16
+R2 est le taux de transmission en binaire, R16 est le taux de transmission sur f16
+/////////////////////////////////////////////////////
+
+-> si r=2, P(chi2)=99732/100000 P(chi16)=97130/100000
+                    R2=1/3 R16=15/17
+-> si r=3, P(chi2)=99508/100000 P(chi16)=51877/100000
+                    R2=4/7 R16=270/273
+-> si r=4, P(chi2)=98952/100000
+                    R2=11/15
+-> si r=5, P(chi2)=97807/100000
+                    R2=26/31
+-> si r=6, P(chi2)=95461/100000
+                    R2=57/63

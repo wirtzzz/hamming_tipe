@@ -1,7 +1,0 @@
-L'utilisation d'autres corps que binaires n'est pas une préoccupation uniquement théorique. Ils sont utilisés pour corriger des effacements qui peuvent être importants. Ils sont utilisés par exemple pour la lecture des disques compacts pouvant corriger jusqu'à 4096 effacements consécutifs7. 
-source : https://fr.wikipedia.org/wiki/Code_de_Hamming#Code_de_Hamming_g%C3%A9n%C3%A9ralis%C3%A9_(dit_%C3%A9galement_'%C3%A9tendu')
-
-Montrer la terminaison de simplifier dans vrai_hamming_lineaire (par récurrence étant donné la définition de Demazure)
-
-
-expliquer que l'on peut faire tous les tests à partir du message de base [0 ... 0]

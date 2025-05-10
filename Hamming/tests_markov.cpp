@@ -50,13 +50,14 @@ int main(){
         simplifier(Pbin);
         Matrice Gbin = gen(Pbin);
 
+        int mbin[Gbin.m];
+
         if (r<=3)
         {
             Matrice16 Pf16 = P16(r); 
             Matrice16 Gf16 = G16(Pf16);
             f16 m16[Gf16.m];
 
-            int mbin[Gbin.m];
             for (int i = 0; i < N; i++)
             {
                 markov_binaire(mbin,Gbin.m);
