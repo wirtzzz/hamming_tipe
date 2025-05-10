@@ -7,3 +7,5 @@ R2 est le taux de transmission en binaire, R16 est le taux de transmission sur f
 
 -> si r=2, P(chi2)=97266/100000 P(chi16)=69934/100000
                     R2=1/3 R16=15/17
+-> si r=3, P(chi2)=95348/100000 P(chi16)=12/100000
+                    R2=4/7 R16=270/273
